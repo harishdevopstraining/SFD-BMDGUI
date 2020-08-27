@@ -31,7 +31,7 @@ def Add():
         x_dist = (float(E2.get()) * 1) + 50
     Ref_line = canvas.create_line(x_dist, 160, x_dist, 650, width=2, fill="grey70", dash = (5,1))
     load_line = canvas.create_line(x_dist,20,x_dist,100, width=5,arrow = "last")
-    define_load = canvas.create_text(x_dist+20, 40, text=float(E1.get()), font=30)
+    define_load = canvas.create_text(x_dist+30, 40, text=str(float(E1.get()))+" "+lu, font=30)
     if float(E2.get()) != 0:
         if float(E2.get()) != a1:
             define_dimen = canvas.create_text(x_dist - 20, 140, text=float(E2.get()), font=30)
@@ -44,10 +44,11 @@ def Beam_OK():
     window1 = tk.Toplevel()
     window1.geometry("1000x690+100+0")
     window1.configure(bg="grey60")
-    global canvas, a1
+    global canvas, a1, lu
     canvas = tk.Canvas(window1, width=950, height=670, bg="White")
     canvas.pack()
     a1 = float(Beam_Length.get())
+    lu = Load_Unit.get()
     if a1 >=0 and a1 <=7:
         Beam = canvas.create_line(50, 100, (a1*100) + 50, 100, width=5)
         dimen = canvas.create_line(50, 150, (a1*100) + 50, 150, width=1)
@@ -240,7 +241,9 @@ def Load():
 def Calculate():
     if cant.get() == 1:
         T1 = tk.Label(window, text="SF and BM Calculation Starting from Right End of the Beam", font=8)
-        T1.place(x=10, y=250)
+        T1.place(x=10, y=200)
+        T2 = tk.Label(window, text="Note: Units for SF:"+lu+ "       Units for BM"+lu+"-m", font=6)
+        T2.place(x=10, y=250)
         y = 300
         list1 = loads_temp
         list2 = load_at_dist_temp
@@ -283,7 +286,10 @@ def Calculate():
             Bending_Moment.append(round(-r,2))
     elif ssb.get() == 1:
         T1 = tk.Label(window, text="SF and BM Calculation Starting from Right End of the Beam", font=8)
-        T1.place(x=10, y=250)
+        T1.place(x=10, y=200)
+        T2 = tk.Label(window, text="Note: Units for SF:" + lu + "        Units for BM" + lu + "-m", font=6)
+        T2.place(x=10, y=250)
+        global R_a, R_b
         R = 0
         for i in range(0, len(loads_temp)):
             R += loads_temp[i]*load_at_dist_temp[i]
@@ -452,27 +458,43 @@ def Draw():
         if a1 >= 0 and a1 <= 7:
             Sf_base = canvas.create_line(50, h, (a1 * 100) + 50, h, width=2)
             bm_base = canvas.create_line(50, h + 300, (a1 * 100) + 50, h + 300, width=2)
+            Reaction_left = canvas.create_text(50, 165, text="R_1= "+str(round(-R_a,2))+" "+lu, font=30)
+            Reaction_right = canvas.create_text((a1 * 100) + 30, 165, text="R_2= "+str(round(-R_b,2))+" "+lu, font=30)
         elif a1 > 7 and a1 <= 14:
             Sf_base = canvas.create_line(50, h, (a1 * 50) + 50, h, width=2)
             bm_base = canvas.create_line(50, h + 300, (a1 * 50) + 50, h + 300, width=2)
+            Reaction_left = canvas.create_text(50, 165, text="R_1= " + str(round(-R_a, 2)) + " " + lu, font=30)
+            Reaction_right = canvas.create_text((a1 * 50) + 30, 165, text="R_2= " + str(round(-R_b, 2)) + " " + lu,font=30)
         elif a1 > 14 and a1 <= 23:
             Sf_base = canvas.create_line(50, h, (a1 * 30) + 50, h, width=2)
             bm_base = canvas.create_line(50, h + 300, (a1 * 30) + 50, h + 300, width=2)
+            Reaction_left = canvas.create_text(50, 165, text="R_1= " + str(round(-R_a, 2)) + " " + lu, font=30)
+            Reaction_right = canvas.create_text((a1 * 30) + 30, 165, text="R_2= " + str(round(-R_b, 2)) + " " + lu,font=30)
         elif a1 > 23 and a1 <= 35:
             Sf_base = canvas.create_line(50, h, (a1 * 20) + 50, h, width=2)
             bm_base = canvas.create_line(50, h + 300, (a1 * 20) + 50, h + 300, width=2)
+            Reaction_left = canvas.create_text(50, 165, text="R_1= " + str(round(-R_a, 2)) + " " + lu, font=30)
+            Reaction_right = canvas.create_text((a1 * 20) + 30, 165, text="R_2= " + str(round(-R_b, 2)) + " " + lu,font=30)
         elif a1 > 35 and a1 <= 70:
             Sf_base = canvas.create_line(50, h, (a1 * 10) + 50, h, width=2)
             bm_base = canvas.create_line(50, h + 300, (a1 * 10) + 50, h + 300, width=2)
+            Reaction_left = canvas.create_text(50, 165, text="R_1= " + str(round(-R_a, 2)) + " " + lu, font=30)
+            Reaction_right = canvas.create_text((a1 * 10) + 30, 165, text="R_2= " + str(round(-R_b, 2)) + " " + lu,font=30)
         elif a1 > 70 and a1 <= 140:
             Sf_base = canvas.create_line(50, h, (a1 * 5) + 50, h, width=2)
             bm_base = canvas.create_line(50, h + 300, (a1 * 5) + 50, h + 300, width=2)
+            Reaction_left = canvas.create_text(50, 165, text="R_1= " + str(round(-R_a, 2)) + " " + lu, font=30)
+            Reaction_right = canvas.create_text((a1 * 5) + 30, 165, text="R_2= " + str(round(-R_b, 2)) + " " + lu,font=30)
         elif a1 > 140 and a1 <= 350:
             Sf_base = canvas.create_line(50, h, (a1 * 2) + 50, h, width=2)
             bm_base = canvas.create_line(50, h + 300, (a1 * 2) + 50, h + 300, width=2)
+            Reaction_left = canvas.create_text(50, 165, text="R_1= " + str(round(-R_a, 2)) + " " + lu, font=30)
+            Reaction_right = canvas.create_text((a1 * 2) + 30, 165, text="R_2= " + str(round(-R_b, 2)) + " " + lu,font=30)
         else:
             Sf_base = canvas.create_line(50, h, a1 + 50, h, width=2)
             bm_base = canvas.create_line(50, h + 300, a1 + 50, h + 300, width=2)
+            Reaction_left = canvas.create_text(50, 165, text="R_1= " + str(round(-R_a, 2)) + " " + lu, font=30)
+            Reaction_right = canvas.create_text((a1) + 30, 165, text="R_2= " + str(round(-R_b, 2)) + " " + lu,font=30)
         x1 = 50
         for ind, force in enumerate(Shear_Force):
             if a1 >= 0 and a1 <= 7:
